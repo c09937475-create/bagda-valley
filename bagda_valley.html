@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bagda Valley Viewpoint — Ranchi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2e1a;
+    --moss: #3d5c2e;
+    --sage: #7a9e6e;
+    --mist: #c8d8c0;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --earth: #6b4c2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--forest);
+    color: var(--cream);
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(61,92,46,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(26,46,26,0.8) 0%, transparent 60%),
+      linear-gradient(160deg, #0d1a0d 0%, #1a2e1a 40%, #243d1a 100%);
+  }
+
+  .mist-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 0 3rem;
+    position: relative;
+  }
+
+  .hero-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .hero-location {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mist);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+    margin-bottom: 3rem;
+  }
+
+  .divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.8s forwards;
+  }
+
+  .hero-desc {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    line-height: 2;
+    color: var(--mist);
+    max-width: 520px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.4s forwards;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--sage);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Stat cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(122,158,110,0.15);
+    border: 1px solid rgba(122,158,110,0.15);
+    margin: 2rem 0 5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .stat {
+    padding: 2rem 1.5rem;
+    background: rgba(13,26,13,0.6);
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .section-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.25);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .section-body {
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    line-height: 2.1;
+    color: var(--mist);
+  }
+
+  /* Feature list */
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .feature {
+    padding: 1.5rem;
+    border: 1px solid rgba(122,158,110,0.2);
+    background: rgba(26,46,26,0.4);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .feature:hover {
+    border-color: rgba(201,168,76,0.4);
+  }
+
+  .feature::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px; height: 0;
+    background: var(--gold);
+    transition: height 0.3s;
+  }
+
+  .feature:hover::before { height: 100%; }
+
+  .feature-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .feature-title {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-text {
+    font-size: 0.78rem;
+    color: var(--mist);
+    line-height: 1.7;
+  }
+
+  /* Info panel */
+  .info-panel {
+    background: rgba(26,46,26,0.5);
+    border: 1px solid rgba(122,158,110,0.2);
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(122,158,110,0.1);
+    gap: 1rem;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+
+  .info-key {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sage);
+    flex-shrink: 0;
+    width: 130px;
+  }
+
+  .info-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--cream);
+    text-align: right;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 3rem 0 1rem;
+    border-top: 1px solid rgba(122,158,110,0.15);
+  }
+
+  .footer-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0.7;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Forest decoration */
+  .tree-silhouette {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.15;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 180'%3E%3Cpath fill='%233d5c2e' d='M0,180 L0,120 L40,90 L60,110 L80,70 L110,100 L130,60 L160,95 L180,45 L210,80 L240,30 L270,75 L290,40 L320,70 L350,20 L380,65 L410,35 L440,60 L470,25 L500,55 L530,15 L560,50 L590,30 L620,65 L650,10 L680,45 L710,25 L740,60 L770,30 L800,70 L830,20 L860,55 L890,35 L920,65 L950,15 L980,50 L1010,30 L1040,65 L1070,40 L1100,75 L1130,25 L1160,60 L1190,35 L1220,70 L1250,45 L1280,80 L1310,50 L1340,90 L1380,70 L1440,100 L1440,180 Z'/%3E%3C/svg%3E") no-repeat bottom;
+    background-size: cover;
+  }
+
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .features { grid-template-columns: 1fr; }
+    .hero { min-height: auto; padding: 5rem 0 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="mist-overlay"></div>
+<div class="tree-silhouette"></div>
+
+<div class="content">
+
+  <div class="hero">
+    <p class="hero-label">Jharkhand · Hidden Gems Series</p>
+    <h1 class="hero-title">Bagda<br><em>Valley</em></h1>
+    <p class="hero-location">Viewpoint, Ranchi</p>
+    <div class="divider"></div>
+    <p class="hero-desc">Where the Chota Nagpur Plateau breathes — a quiet escarpment above Ranchi where forested ridges dissolve into layered mist and the city below feels impossibly distant.</p>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-num">~850m</span>
+        <span class="stat-label">Elevation</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">18 km</span>
+        <span class="stat-label">From City Centre</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">360°</span>
+        <span class="stat-label">Panoramic View</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll to explore
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="section reveal">
+    <p class="section-tag">The Place</p>
+    <h2 class="section-title">A Valley Above the World</h2>
+    <p class="section-body">
+      Bagda Valley Viewpoint sits on the outskirts of Ranchi in Jharkhand, perched along the undulating edge of the Chota Nagpur Plateau. It is one of those places that rewards the unhurried — dense sal forests frame either side of the road leading up, and the viewpoint itself opens without warning into a vast, silent panorama of the valley below.<br><br>
+      The landscape is distinctly Jharkhand: rocky outcrops, forested slopes, seasonal waterfalls threading the hillsides, and a sky that turns extraordinary shades during sunrise and sunset. On clear mornings, the mist sits low in the valley like a still lake, and the ridgelines emerge above it like islands.
+    </p>
+  </div>
+
+  <!-- Features -->
+  <div class="section reveal">
+    <p class="section-tag">Highlights</p>
+    <h2 class="section-title">What Awaits You</h2>
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">🌅</span>
+        <p class="feature-title">Sunrise & Sunset</p>
+        <p class="feature-text">The golden hour here is unmatched — valley mist catches the first light in a way that's difficult to describe and impossible to forget.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🌿</span>
+        <p class="feature-title">Forest Trails</p>
+        <p class="feature-text">Informal trails cut through the surrounding sal and teak forest, ideal for short hikes or quiet walks away from the viewpoint crowd.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📸</span>
+        <p class="feature-title">Photography</p>
+        <p class="feature-text">A favourite among Ranchi photographers. The layered ridgelines and valley fog create a natural depth that rewards patience.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🦅</span>
+        <p class="feature-title">Birdwatching</p>
+        <p class="feature-text">Raptors ride thermals above the valley. Resident and migratory birds are sighted year-round in the surrounding forest cover.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🌧️</span>
+        <p class="feature-title">Monsoon Magic</p>
+        <p class="feature-text">July to September transforms the landscape dramatically — waterfalls appear, the forest deepens to vivid green, and mist is near-constant.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🔇</span>
+        <p class="feature-title">Solitude</p>
+        <p class="feature-text">Away from Ranchi's popular tourist circuits, Bagda remains genuinely quiet — especially on weekday mornings.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visitor Info -->
+  <div class="section reveal">
+    <p class="section-tag">Plan Your Visit</p>
+    <h2 class="section-title">Essential Information</h2>
+    <div class="info-panel">
+      <div class="info-row">
+        <span class="info-key">Location</span>
+        <span class="info-val">Bagda, Ranchi District, Jharkhand</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Best Season</span>
+        <span class="info-val">October – March · July – September</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Best Time of Day</span>
+        <span class="info-val">Sunrise (5:30–7 AM) · Sunset (5–6:30 PM)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">From Ranchi</span>
+        <span class="info-val">~45 min by road · NH-75 direction</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Entry</span>
+        <span class="info-val">Open access · No entry fee</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Nearest Town</span>
+        <span class="info-val">Bagda Village · Basic amenities available</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">What to Carry</span>
+        <span class="info-val">Water · Light jacket · Camera · Charged phone</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note -->
+  <div class="section reveal">
+    <p class="section-tag">Local Note</p>
+    <h2 class="section-title">Keep It As You Found It</h2>
+    <p class="section-body">
+      Bagda Valley remains unspoiled precisely because it stays off the primary tourist trail. Carry out all waste, avoid loud music at the viewpoint, and respect the forest boundaries. The silence here is part of what makes it worth visiting. Protect it accordingly.
+    </p>
+  </div>
+
+  <div class="footer">
+    <p class="footer-text">Bagda Valley Viewpoint · Ranchi, Jharkhand · India</p>
+  </div>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
